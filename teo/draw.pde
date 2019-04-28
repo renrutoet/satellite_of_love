@@ -17,11 +17,11 @@ void drawDailyPoints(PVector[] arr) {
   }
 }
 
-void drawMaxLine(PVector[] arr){
+void drawMaxLine(PVector[] arr,int arrNum){
   
   for (int l = 0; l < arr.length-1; l++) {
  
-  if (l == maxIndex) {
+  if (l == maxArr.get(arrNum)) {
       cSize = 15;
       //draws a line from the centre to the day with the max no of visitors
       stroke(0, 255);
@@ -65,8 +65,4 @@ void drawAvgCircle(float circleSize){
   stroke(0);
   strokeWeight(2);
   ellipse(width/2,height/2,circleSize,circleSize);
-}
-
-void drawAll(){
-  
 }

@@ -40,7 +40,7 @@ PVector[] storeWeeklyData(Table year) {
 //---------------------------------------------------------------------------------------------------------------------------
   //daily data handling
   
- PVector[] storeDailyData(Table year){
+ PVector[] storeDailyData(Table year,int num){
    interval = 0;
    
    PVector[] tempArr = new PVector[364];
@@ -65,7 +65,7 @@ PVector[] storeWeeklyData(Table year) {
     
     for (int n = peopleNums.length-1; n > 0; n--) {
       if(peopleNums[n] == max){
-        maxIndex = n;
+        max = n;
       }
     }
 
@@ -82,5 +82,6 @@ PVector[] storeWeeklyData(Table year) {
  
       }
     }
+  maxArr.add(int(max));
   return tempArr;
  }

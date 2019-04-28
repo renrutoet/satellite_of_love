@@ -25,13 +25,12 @@ boolean lerp;
 float maxIndex;
 int currentYear;
 
-
-
 //array of yearly avgs 
 int [] yrAvg = {24583, 22710, 20100, 17253, 15426};
 
 float year1Min;
 float year1Max;
+ArrayList<Integer> maxArr = new ArrayList<Integer>();
 
 //year
 PVector[] year1Weekly, year1Daily, year2Daily, year2Weekly;
@@ -77,24 +76,18 @@ void setup() {
   weeklyArr = new PVector[5][];
   dailyArr = new PVector[5][];
   
+  
+  //storing all table data in arrays
   for(int i = 0 ; i < tables.length ; i++){
-    println(i);
     weeklyArr[i] = storeWeeklyData(tables[i]);
-    dailyArr[i] = storeDailyData(tables[i]);
+    dailyArr[i] = storeDailyData(tables[i],i);
   }
-  
-  printArray(weeklyArr[0]);
-  printArray(dailyArr[0]);
-  
-  year1Weekly = storeWeeklyData(tables[0]);
-  year1Daily = storeDailyData(tables[0]);
-  year2Weekly = storeWeeklyData(tables[1]);
-  year2Daily = storeDailyData(tables[1]);
   
   i = 0.0;
   j = 0;
   
   currentYear = 0;
+  printArray(maxArr);
 }
 
 void draw() {
@@ -117,7 +110,7 @@ void draw() {
     drawDailyPoints(dailyArr[currentYear]);
     
     //draw line for largest day
-    drawMaxLine(dailyArr[currentYear]);
+    drawMaxLine(dailyArr[currentYear],currentYear);
     
     //draw average circle
     drawAvgCircle(getAvgCircle(currentYear));
@@ -126,12 +119,20 @@ void draw() {
 //if transition run this code
       else{
 //declare our start point and end point
-    
+      println(currentYear);
       //array of starting points
-      weeklyLerpArr = lerpArr(year1Weekly,year2Weekly,i);
+      weeklyLerpArr = lerpArr(weeklyArr[currentYear - 1],weeklyArr[currentYear],i);
       
       //array of end point
-      dailyLerpArr = lerpArr(year1Daily,year2Daily,i);
+      dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
+      
+      if(currentYear >= 4){
+      //array of starting points
+      weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
+      
+      //array of end point
+      dailyLerpArr = lerpArr(dailyArr[4],dailyArr[0],i);
+      }
       
       //uses weekly data
       //draw lines from weekly dots
@@ -143,7 +144,7 @@ void draw() {
       drawDailyPoints(dailyLerpArr);
 
       //draw line for largest day
-      drawMaxLine(dailyLerpArr);
+      drawMaxLine(dailyLerpArr,currentYear);
       
 //-------- Drawing Avg circle ------------------------------------
       //getting circle start and stop values
@@ -169,12 +170,16 @@ void draw() {
       //weekly lerp step value reset
       if(j >= 52){
        j = 0;
-      
       }
+      
     }
 } // end of draw
 
 void mousePressed(){
   lerp = true;
   currentYear++;
+  if(currentYear >= 4)
+  {
+     currentYear = 1;
+  }
 }
