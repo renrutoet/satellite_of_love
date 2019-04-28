@@ -20,7 +20,7 @@ PVector[] storeWeeklyData(Table year) {
     val = year.getInt(rows, 7);
     //calculate the angles for the number of values (365)
     angle2 = map(interval2, 0, 52, 0, TWO_PI) - HALF_PI;
-    //map the value to one we can use 
+    //map the value to one we can use
     avgpeopleno = map(val, 0, 50000, 0, mapVal);
 // --------------------------------------------------------------------------------------------------------------------------
     //weekly data
@@ -60,7 +60,14 @@ PVector[] storeWeeklyData(Table year) {
       peopleNums[n] = peopleNums[n-1];
       peopleNums[0] = peopleNo;
     }
-
+    
+    max = max(peopleNums);
+    
+    for (int n = peopleNums.length-1; n > 0; n--) {
+      if(peopleNums[n] == max){
+        maxIndex = n;
+      }
+    }
 
     //calculate the angles for the number of values (365)
     angle = map(interval, 0, 365, 0, TWO_PI) - HALF_PI;

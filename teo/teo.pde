@@ -8,14 +8,25 @@ float [] peopleNums = new float[364];
 PVector[] pos;
 //array to store avg people nos -- Weekly Data
 PVector [] peopleAvg;
+
+//---------------------Lerping variables-------------------------------------
 //array to store lerping values and used for drawing
 PVector [] lerpArr;
 PVector[] lerpArr2;
+float year1Circle;
+float year2Circle;
+float lerpSize;
+float i;
+int j;
+//---------------------End of Lerping variables-------------------------------------
+
+float maxIndex;
+
 //array of yearly avgs 
 int [] yrAvg = {24583, 22710, 20100, 17253, 15426};
 
-float i;
-int j;
+float year1Min;
+float year1Max;
 
 //year
 PVector[] year1Weekly, year1Daily, year2Daily, year2Weekly;
@@ -28,7 +39,7 @@ color [] colours = {#BF809F, #2A3F59, #66C6E3, #FFFFFF, #000000};
 
 void setup() {
 
-  size(750,750);
+  size(displayWidth,displayHeight);
   background(255);
 
   //change these to change the position it's drawn at
@@ -48,9 +59,6 @@ void setup() {
   tables[2] = loadTable("2016.csv");
   tables[3] = loadTable("2017.csv");
   tables[4] = loadTable("2018.csv");
-  
-  //min = min(peopleNums);
-  //max=max(peopleNums);
 
   pos = new PVector[364]; // Daily Data Array -- PVector
   peopleAvg = new PVector[52]; // Weekly Data Array -- PVector
@@ -80,39 +88,34 @@ void setup() {
 void draw() {
   
     background(255);
-    if(i > 1){
-     i = 0.0; 
-    }
-    if(j >= 52){
-     j = 0; 
-    }
+    
     
     lerpArr = lerpArr(year1Weekly,year2Weekly,j,i);
     lerpArr2 = lerpArr(year1Daily,year2Daily,j,i);
 
     //rendering functions
-    //draw lines between weekly data points
     if(mousePressed){
-    /*
-    drawLines(year2Weekly);
-    //draws daily dots
-    drawDailyPoints(year2Daily);
-    //draws weekly dots
-    drawAvgPoints(year2Weekly);
-    //draw average circle
-    drawAvgCircle(1);
-    */
+      if(i > 1){
+       i = 0.0; 
+      }
+      if(j >= 52){
+       j = 0; 
+      }
     
-    drawLines(lerpArr);
-    
-    drawDailyPoints(lerpArr2);
-    
-    //draws weekly dots
-    drawAvgPoints(lerpArr);
-    
-    //println(i);
-    //println(j);
-    
+      drawLines(lerpArr);
+      drawDailyPoints(lerpArr2);
+      drawAvgPoints(lerpArr);
+      drawMaxLine(lerpArr);
+      
+      year1Circle = getAvgCircle(0);
+      year2Circle = getAvgCircle(1);
+      
+      lerpSize = lerp(year1Circle,year2Circle,i);
+      drawAvgCircle(lerpSize);
+
+      j++;
+      i += 1.0/50.0;
+      
     }
     else{
     drawLines(year1Weekly);
@@ -121,8 +124,12 @@ void draw() {
     //draws weekly dots
     drawAvgPoints(year1Weekly);
     //draw average circle
-    drawAvgCircle(0);
+    noFill();
+    stroke(0);
+    strokeWeight(2);
+    ellipse(width/2,height/2,getAvgCircle(0),getAvgCircle(0));
+    //draw max line
+    drawMaxLine(year1Daily);
     }
-    j++;
-    i += 1.0/50.0;
+    
 }

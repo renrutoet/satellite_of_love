@@ -17,13 +17,3 @@ PVector[] lerpArr(PVector[] arr,PVector[] arr2, int step, float i){
 
   return tempArr;
 }
-
-//lerp function for average circle
-
-int lerpInt(int yearOne, int yearTwo){
-  int temp = 0;
-  
-  
-  
-  return temp;
-}
