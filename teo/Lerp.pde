@@ -1,4 +1,4 @@
-PVector[] lerpArr(PVector[] arr,PVector[] arr2, int step, float i){
+PVector[] lerpArr(PVector[] arr,PVector[] arr2, float i){
   
     PVector[] tempArr = new PVector[arr.length];
 
