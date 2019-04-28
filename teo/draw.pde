@@ -23,6 +23,7 @@ void drawMaxLine(PVector[] arr,int arrNum){
  
   if (l == maxArr.get(arrNum)) {
       cSize = 15;
+      ellipse(arr[l].x,arr[l].y,cSize,cSize);
       //draws a line from the centre to the day with the max no of visitors
       stroke(0, 255);
       strokeWeight(3);

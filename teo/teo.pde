@@ -46,6 +46,7 @@ void setup() {
 
   size(displayWidth,displayHeight);
   background(255);
+  frameRate(60);
 
   //change these to change the position it's drawn at
   cx = width/2;
@@ -118,20 +119,21 @@ void draw() {
 //-----------------------------------------------------
 //if transition run this code
       else{
-//declare our start point and end point
+      //declare our start point and end point
       println(currentYear);
       //array of starting points
       weeklyLerpArr = lerpArr(weeklyArr[currentYear - 1],weeklyArr[currentYear],i);
       
       //array of end point
       dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
-      
+      println(currentYear);
       if(currentYear >= 4){
       //array of starting points
       weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
       
       //array of end point
       dailyLerpArr = lerpArr(dailyArr[4],dailyArr[0],i);
+      currentYear = 1;
       }
       
       //uses weekly data
@@ -148,8 +150,8 @@ void draw() {
       
 //-------- Drawing Avg circle ------------------------------------
       //getting circle start and stop values
-      year1Circle = getAvgCircle(0);
-      year2Circle = getAvgCircle(1);
+      year1Circle = getAvgCircle(currentYear - 1);
+      year2Circle = getAvgCircle(currentYear);
       
       //calculate the circles lerp values
       lerpSize = lerp(year1Circle,year2Circle,i);
@@ -182,4 +184,5 @@ void mousePressed(){
   {
      currentYear = 1;
   }
+  
 }
