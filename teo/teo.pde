@@ -17,7 +17,6 @@ float year1Circle;
 float year2Circle;
 float lerpSize;
 float i;
-int j;
 boolean fullReset;
 boolean lerp;
 //---------------------End of Lerping variables-------------------------------------
@@ -85,7 +84,6 @@ void setup() {
   }
   
   i = 0.0;
-  j = 0;
   
   currentYear = 0;
   printArray(maxArr);
@@ -129,6 +127,7 @@ void draw() {
       //println(currentYear);
       if(currentYear >= 4){
       //array of starting points
+      
       weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
       
       //array of end point
@@ -142,8 +141,7 @@ void draw() {
       //array of end point
       dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
       }
-      //printArray(weeklyLerpArr);
-      
+
       //uses weekly data
       //draw lines from weekly dots
       drawLines(weeklyLerpArr);
@@ -179,17 +177,12 @@ void draw() {
 //-------- end of circle ------------------------------------------
 
       //incrementing lerp values
-      j++;
       i += 1.0/120.0;
       
       //lerp interpolation value reset
-      if(i >= 1){
+      if(i > 1){
        i = 0.0;
        lerp = false;
-      }
-      //weekly lerp step value reset
-      if(j >= 52){
-       j = 0;
       }
       
     }
@@ -198,6 +191,8 @@ void draw() {
 void mousePressed(){
   lerp = true;
   currentYear++;
+  println(currentYear);
+  println(i);
   if(currentYear >= 5){
    currentYear = 1; 
   }
