@@ -18,7 +18,7 @@ float year2Circle;
 float lerpSize;
 float i;
 int j;
-
+boolean fullReset;
 boolean lerp;
 //---------------------End of Lerping variables-------------------------------------
 
@@ -44,7 +44,7 @@ color [] colours = {#BF809F, #2A3F59, #66C6E3, #FFFFFF, #000000};
 
 void setup() {
 
-  size(displayWidth,displayHeight);
+  size(displayWidth,displayHeight,P3D);
   background(255);
   frameRate(60);
 
@@ -101,6 +101,10 @@ void draw() {
 
 //if static run this code
     if(!lerp){
+    if(fullReset){
+     currentYear = 0;
+     fullReset = false;
+    }
     //uses weekly data
     //draw lines from weekly dots
     drawLines(weeklyArr[currentYear]);
@@ -120,21 +124,25 @@ void draw() {
 //if transition run this code
       else{
       //declare our start point and end point
-      println(currentYear);
-      //array of starting points
-      weeklyLerpArr = lerpArr(weeklyArr[currentYear - 1],weeklyArr[currentYear],i);
       
-      //array of end point
-      dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
-      println(currentYear);
+      
+      //println(currentYear);
       if(currentYear >= 4){
       //array of starting points
       weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
       
       //array of end point
       dailyLerpArr = lerpArr(dailyArr[4],dailyArr[0],i);
-      currentYear = 1;
+      fullReset=true;
       }
+      else {
+        //array of starting points
+      weeklyLerpArr = lerpArr(weeklyArr[currentYear - 1],weeklyArr[currentYear],i);
+      
+      //array of end point
+      dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
+      }
+      //printArray(weeklyLerpArr);
       
       //uses weekly data
       //draw lines from weekly dots
@@ -146,13 +154,23 @@ void draw() {
       drawDailyPoints(dailyLerpArr);
 
       //draw line for largest day
+      if(!fullReset){
       drawMaxLine(dailyLerpArr,currentYear);
+      }
+      else{
+      drawMaxLine(dailyLerpArr,0);
+      }
       
 //-------- Drawing Avg circle ------------------------------------
       //getting circle start and stop values
+      if(!fullReset){
       year1Circle = getAvgCircle(currentYear - 1);
       year2Circle = getAvgCircle(currentYear);
-      
+      }
+      else{
+      year1Circle = getAvgCircle(4);
+      year2Circle = getAvgCircle(0);
+      }
       //calculate the circles lerp values
       lerpSize = lerp(year1Circle,year2Circle,i);
       
@@ -162,7 +180,7 @@ void draw() {
 
       //incrementing lerp values
       j++;
-      i += 1.0/50.0;
+      i += 1.0/120.0;
       
       //lerp interpolation value reset
       if(i >= 1){
@@ -180,9 +198,7 @@ void draw() {
 void mousePressed(){
   lerp = true;
   currentYear++;
-  if(currentYear >= 4)
-  {
-     currentYear = 1;
+  if(currentYear >= 5){
+   currentYear = 1; 
   }
-  
 }
