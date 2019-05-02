@@ -61,8 +61,10 @@ PVector[] storeWeeklyData(Table year) {
       peopleNums[0] = peopleNo;
     }
     
+    //find the largest value in the array i.e. day with most traffic
     max = max(peopleNums);
     
+    //if the current day is the largest save the index to max - the be stored in an array later
     for (int n = peopleNums.length-1; n > 0; n--) {
       if(peopleNums[n] == max){
         max = n;
@@ -82,6 +84,7 @@ PVector[] storeWeeklyData(Table year) {
  
       }
     }
+  //add index value for the most trafficed day in an array for use drawing the max line
   maxArr.add(int(max));
   return tempArr;
  }

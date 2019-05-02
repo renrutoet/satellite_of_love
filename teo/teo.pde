@@ -20,7 +20,7 @@ float i;
 boolean fullReset;
 boolean lerp;
 //---------------------End of Lerping variables-------------------------------------
-
+PVector largestDay;
 float maxIndex;
 int currentYear;
 
@@ -75,6 +75,7 @@ void setup() {
   
   weeklyArr = new PVector[5][];
   dailyArr = new PVector[5][];
+  largestDay = new PVector();
   
   
   //storing all table data in arrays
@@ -84,20 +85,15 @@ void setup() {
   }
   
   i = 0.0;
-  
   currentYear = 0;
-  printArray(maxArr);
+  
 }
 
 void draw() {
 
     background(255);
     
-    //fork ----are we transitioning from one year to the other or displaying a static image?
-    
 //-----------------------------------------------------
-
-//if static run this code
     if(!lerp){
     if(fullReset){
      currentYear = 0;
@@ -113,17 +109,17 @@ void draw() {
     drawDailyPoints(dailyArr[currentYear]);
     
     //draw line for largest day
-    drawMaxLine(dailyArr[currentYear],currentYear);
+    largestDay = getLargestDay(dailyArr[currentYear],currentYear);
+    float x = largestDay.x;
+    float y = largestDay.y;
+    drawMaxLine(x,y);
     
     //draw average circle
     drawAvgCircle(getAvgCircle(currentYear));
     }
 //-----------------------------------------------------
-//if transition run this code
       else{
       //declare our start point and end point
-      
-      
       //println(currentYear);
       if(currentYear >= 4){
       //array of starting points
@@ -151,12 +147,28 @@ void draw() {
       //draw daily dots
       drawDailyPoints(dailyLerpArr);
 
+//-----------Draw Max Line --------------------------------------
       //draw line for largest day
       if(!fullReset){
-      drawMaxLine(dailyLerpArr,currentYear);
+      largestDay = getLargestDay(dailyLerpArr,currentYear);
+      float x = largestDay.x;
+      float y = largestDay.y;
+      if(i > 0.5){
+      float temp = i;
+      temp = abs(temp - 0.5) * 2;
+      x = lerp(width/2,x,temp);
+      y = lerp(height/2,y,temp);
+      drawMaxLine(x,y);
+      }
       }
       else{
-      drawMaxLine(dailyLerpArr,0);
+      
+      largestDay = getLargestDay(dailyLerpArr,0);
+      float x = largestDay.x;
+      float y = largestDay.y;
+      x = lerp(width/2,x,i);
+      y = lerp(height/2,y,i);
+      drawMaxLine(x, y);
       }
       
 //-------- Drawing Avg circle ------------------------------------
@@ -189,6 +201,7 @@ void draw() {
 } // end of draw
 
 void mousePressed(){
+  i = 0;
   lerp = true;
   currentYear++;
   println(currentYear);

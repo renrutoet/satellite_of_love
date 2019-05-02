@@ -17,10 +17,13 @@ void drawDailyPoints(PVector[] arr) {
   }
 }
 
-void drawMaxLine(PVector[] arr,int arrNum){
+PVector getLargestDay(PVector[] arr,int arrNum){
   
+  /*
+  //go through array parameter
   for (int l = 0; l < arr.length-1; l++) {
- 
+  
+    
   if (l == maxArr.get(arrNum)) {
       cSize = 15;
       ellipse(arr[l].x,arr[l].y,cSize,cSize);
@@ -30,7 +33,27 @@ void drawMaxLine(PVector[] arr,int arrNum){
       line(width/2, height/2, arr[l].x, arr[l].y);
     }
   }
+  */
+  PVector day = new PVector();
   
+  //go through array parameter
+  for (int l = 0; l < arr.length-1; l++) {
+
+  if (l == maxArr.get(arrNum)) {
+    day = arr[l];
+  }
+  }
+  
+  return day;
+}
+
+void drawMaxLine(float x ,float y){
+      cSize = 15;
+      ellipse(x,y,cSize,cSize);
+      //draws a line from the centre to the day with the max no of visitors
+      stroke(0, 255);
+      strokeWeight(3);
+      line(width/2, height/2, x, y);
 }
 
 //this draws all of the average points - stored in pvector array peopleAvg - IGNORE peopleNums, leave that the same that just determines the size of the ellipses drawn, which should stay the same 
