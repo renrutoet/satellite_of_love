@@ -27,7 +27,7 @@ float maxIndex;
 int currentYear;
 
 //array of yearly avgs 
-int [] yrAvg = {24583, 22710, 20100, 17253, 15426};
+int [] yrAvg = {24583, 22710, 20100, 17253, 15426,7418};
 
 float year1Min;
 float year1Max;
@@ -41,7 +41,7 @@ int val, interval, interval2, cx, cy, tab;
 float peopleNo, mapVal, min, max, angle, angle2, avgpeopleno, cSize, avg;
 
 color [] colours = {#BF809F, #2A3F59, #66C6E3, #FFFFFF, #000000};
-String[] years = {"2014","2015","2016","2017","2018","2014"};
+String[] years = {"2014","2015","2016","2017","2018","2019","2014"};
 
 boolean pause;
 int count;
@@ -67,12 +67,14 @@ void setup() {
   interval2 = 0;
 
   //load the data
-  tables = new Table[5];
+  tables = new Table[6];
   tables[0] = loadTable("2014.csv");
   tables[1] = loadTable("2015.csv");
   tables[2] = loadTable("2016.csv");
   tables[3] = loadTable("2017.csv");
   tables[4] = loadTable("2018.csv");
+  tables[5] = loadTable("2019.csv");
+
 
   pos = new PVector[364]; // Daily Data Array -- PVector
   peopleAvg = new PVector[52]; // Weekly Data Array -- PVector
@@ -83,8 +85,8 @@ void setup() {
   dailyLerpArr = new PVector[52]; // Array containing all of the lerped values between Days
   //function saves the daily and weekly data into the |pos| and |peopleAvg| arrays as PVectors.
   
-  weeklyArr = new PVector[5][];
-  dailyArr = new PVector[5][];
+  weeklyArr = new PVector[tables.length][];
+  dailyArr = new PVector[tables.length][];
   largestDay = new PVector();
   
   
@@ -137,9 +139,9 @@ void draw() {
         lastYearDaily = lerpArr(dailyArr[0],dailyArr[1],i);
       }
 
-      if(currentYear == 5){
-      weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
-      dailyLerpArr = lerpArr(dailyArr[4],dailyArr[0],i);
+      if(currentYear == weeklyArr.length){
+      weeklyLerpArr = lerpArr(weeklyArr[weeklyArr.length - 1],weeklyArr[0],i);
+      dailyLerpArr = lerpArr(dailyArr[weeklyArr.length - 1],dailyArr[0],i);
       fullReset = true;
       }
       else {
@@ -201,7 +203,7 @@ void draw() {
       year2Circle = getAvgCircle(currentYear);
       }
       else{
-      year1Circle = getAvgCircle(4);
+      year1Circle = getAvgCircle(weeklyArr.length);
       year2Circle = getAvgCircle(0);
       }
       //calculate the circles lerp values
@@ -215,7 +217,7 @@ void draw() {
       text(years[currentYear],width/2,height - height/12);
 
       //incrementing lerp values
-      i += 1.0/600.0;
+      i += 1.0/300.0;
       
       //lerp interpolation value reset
       if(i > 1){
