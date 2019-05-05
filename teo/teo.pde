@@ -1,5 +1,6 @@
 import processing.pdf.*;
 
+PFont source;
 //array to store table data
 Table[] tables;
 //array to store mapped people nos
@@ -13,6 +14,7 @@ PVector [] peopleAvg;
 //array to store lerping values and used for drawing
 PVector [] weeklyLerpArr;
 PVector[] dailyLerpArr;
+PVector[] lastYearDaily;
 float year1Circle;
 float year2Circle;
 float lerpSize;
@@ -39,11 +41,18 @@ int val, interval, interval2, cx, cy, tab;
 float peopleNo, mapVal, min, max, angle, angle2, avgpeopleno, cSize, avg;
 
 color [] colours = {#BF809F, #2A3F59, #66C6E3, #FFFFFF, #000000};
+String[] years = {"2014","2015","2016","2017","2018","2014"};
+
+boolean pause;
+int count;
 
 
 void setup() {
+  
+  count = 0;
+  pause = false;
 
-  size(displayWidth,displayHeight,P3D);
+  size(1000,1000,P3D);
   background(255);
   frameRate(60);
 
@@ -67,10 +76,11 @@ void setup() {
 
   pos = new PVector[364]; // Daily Data Array -- PVector
   peopleAvg = new PVector[52]; // Weekly Data Array -- PVector
+  lastYearDaily = new PVector[364];
+
   
   weeklyLerpArr = new PVector[52]; // Array containing all of the lerped values between Weeks
   dailyLerpArr = new PVector[52]; // Array containing all of the lerped values between Days
-  
   //function saves the daily and weekly data into the |pos| and |peopleAvg| arrays as PVectors.
   
   weeklyArr = new PVector[5][];
@@ -83,22 +93,25 @@ void setup() {
     weeklyArr[i] = storeWeeklyData(tables[i]);
     dailyArr[i] = storeDailyData(tables[i],i);
   }
-  
+  lerp = true;
   i = 0.0;
-  currentYear = 0;
+  currentYear = 1;
   
+  
+  source = createFont("SourceCodePro-Semibold.ttf" , 40);
+  textSize(40);
+  textAlign(CENTER);
+  textFont(source);
 }
 
 void draw() {
 
+    if(!pause){
     background(255);
-    
+
 //-----------------------------------------------------
     if(!lerp){
-    if(fullReset){
-     currentYear = 0;
-     fullReset = false;
-    }
+    
     //uses weekly data
     //draw lines from weekly dots
     drawLines(weeklyArr[currentYear]);
@@ -119,22 +132,22 @@ void draw() {
     }
 //-----------------------------------------------------
       else{
-      //declare our start point and end point
-      //println(currentYear);
-      if(currentYear >= 4){
-      //array of starting points
       
+      if(currentYear == 1){
+        lastYearDaily = lerpArr(dailyArr[0],dailyArr[1],i);
+      }
+
+      if(currentYear == 5){
       weeklyLerpArr = lerpArr(weeklyArr[4],weeklyArr[0],i);
-      
-      //array of end point
       dailyLerpArr = lerpArr(dailyArr[4],dailyArr[0],i);
-      fullReset=true;
+      fullReset = true;
       }
       else {
-        //array of starting points
+        if(fullReset){
+           currentYear = 1;
+           fullReset = false;
+        }
       weeklyLerpArr = lerpArr(weeklyArr[currentYear - 1],weeklyArr[currentYear],i);
-      
-      //array of end point
       dailyLerpArr = lerpArr(dailyArr[currentYear - 1],dailyArr[currentYear],i);
       }
 
@@ -150,17 +163,26 @@ void draw() {
 //-----------Draw Max Line --------------------------------------
       //draw line for largest day
       if(!fullReset){
+      PVector lastYear = getLargestDay(lastYearDaily,currentYear - 1);
       largestDay = getLargestDay(dailyLerpArr,currentYear);
       float x = largestDay.x;
       float y = largestDay.y;
-      if(i > 0.5){
+      
       float temp = i;
-      temp = abs(temp - 0.5) * 2;
-      x = lerp(width/2,x,temp);
-      y = lerp(height/2,y,temp);
-      drawMaxLine(x,y);
-      }
-      }
+      temp = abs(i - 0.5) * 2;
+        if(i < 0.5){
+            x = lastYear.x;
+            y = lastYear.y;
+            x = lerp(x,width/2,i * 2);
+            y = lerp(y,height/2,i * 2);
+            drawMaxLine(x,y);
+        }
+        else if(i >= 0.5){
+            x = lerp(width/2,x,constrain(temp,0,1));
+            y = lerp(height/2,y,constrain(temp,0,1));
+            drawMaxLine(x,y);
+          }
+        }
       else{
       
       largestDay = getLargestDay(dailyLerpArr,0);
@@ -170,6 +192,7 @@ void draw() {
       y = lerp(height/2,y,i);
       drawMaxLine(x, y);
       }
+      
       
 //-------- Drawing Avg circle ------------------------------------
       //getting circle start and stop values
@@ -187,16 +210,36 @@ void draw() {
       //draws the circle
       drawAvgCircle(lerpSize);
 //-------- end of circle ------------------------------------------
+//-------- Text ---------------------------------------------------
+
+      text(years[currentYear],width/2,height - height/12);
 
       //incrementing lerp values
-      i += 1.0/120.0;
+      i += 1.0/600.0;
       
       //lerp interpolation value reset
       if(i > 1){
        i = 0.0;
-       lerp = false;
+       //lerp = false;
+       currentYear++;
+       if(currentYear >= 6){
+         currentYear = 1;
+        }
+        lastYearDaily = dailyLerpArr;
+        pause = true;
       }
       
+
+      
+    }
+    
+    }
+    else {
+    count++;
+    if(count >= 300){
+      pause = false;
+      count = 0;
+    }
     }
 } // end of draw
 
@@ -204,8 +247,6 @@ void mousePressed(){
   i = 0;
   lerp = true;
   currentYear++;
-  println(currentYear);
-  println(i);
   if(currentYear >= 5){
    currentYear = 1; 
   }
