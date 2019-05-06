@@ -41,7 +41,7 @@ int val, interval, interval2, cx, cy, tab;
 float peopleNo, mapVal, min, max, angle, angle2, avgpeopleno, cSize, avg;
 
 color [] colours = {#BF809F, #2A3F59, #66C6E3, #FFFFFF, #000000};
-String[] years = {"2014","2015","2016","2017","2018","2019","2014"};
+String[] years = {"2014","2015","2016","2017","2018","2014"};
 
 boolean pause;
 int count;
@@ -67,13 +67,13 @@ void setup() {
   interval2 = 0;
 
   //load the data
-  tables = new Table[6];
+  tables = new Table[5];
   tables[0] = loadTable("2014.csv");
   tables[1] = loadTable("2015.csv");
   tables[2] = loadTable("2016.csv");
   tables[3] = loadTable("2017.csv");
   tables[4] = loadTable("2018.csv");
-  tables[5] = loadTable("2019.csv");
+  //tables[5] = loadTable("2019.csv");
 
 
   pos = new PVector[364]; // Daily Data Array -- PVector
@@ -217,7 +217,7 @@ void draw() {
       text(years[currentYear],width/2,height - height/12);
 
       //incrementing lerp values
-      i += 1.0/300.0;
+      i += 1.0/600.0;
       
       //lerp interpolation value reset
       if(i > 1){
@@ -230,18 +230,15 @@ void draw() {
         lastYearDaily = dailyLerpArr;
         pause = true;
       }
-      
-
-      
     }
     
     }
     else {
     count++;
-    if(count >= 300){
-      pause = false;
-      count = 0;
-    }
+      if(count >= 300){
+        pause = false;
+        count = 0;
+      }
     }
 } // end of draw
 
