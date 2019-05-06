@@ -186,13 +186,28 @@ void draw() {
           }
         }
       else{
+     
       
+      PVector lastYear = getLargestDay(lastYearDaily,currentYear - 1);
       largestDay = getLargestDay(dailyLerpArr,0);
+      
       float x = largestDay.x;
       float y = largestDay.y;
-      x = lerp(width/2,x,i);
-      y = lerp(height/2,y,i);
-      drawMaxLine(x, y);
+      
+      float temp = i;
+      temp = abs(i - 0.5) * 2;
+        if(i < 0.5){
+            x = lastYear.x;
+            y = lastYear.y;
+            x = lerp(x,width/2,i * 2);
+            y = lerp(y,height/2,i * 2);
+            drawMaxLine(x,y);
+        }
+        else if(i >= 0.5){
+            x = lerp(width/2,x,constrain(temp,0,1));
+            y = lerp(height/2,y,constrain(temp,0,1));
+            drawMaxLine(x,y);
+          }
       }
       
       
@@ -203,7 +218,7 @@ void draw() {
       year2Circle = getAvgCircle(currentYear);
       }
       else{
-      year1Circle = getAvgCircle(weeklyArr.length);
+      year1Circle = getAvgCircle(weeklyArr.length -1);
       year2Circle = getAvgCircle(0);
       }
       //calculate the circles lerp values
@@ -217,7 +232,7 @@ void draw() {
       text(years[currentYear],width/2,height - height/12);
 
       //incrementing lerp values
-      i += 1.0/600.0;
+      i += 1.0/150.0;
       
       //lerp interpolation value reset
       if(i > 1){
@@ -235,7 +250,7 @@ void draw() {
     }
     else {
     count++;
-      if(count >= 300){
+      if(count >= 60){
         pause = false;
         count = 0;
       }
